@@ -249,7 +249,7 @@ function endQuarter() {
     updateCardsInGame();
 
     // Let the coach know that the new PER stats are up to date. 
-    alert('Q' + (currentQuarter+1) + ' PER stats are in!');
+    alert('Q' + (currentQuarter) + ' PER stats are in!');
 
     // Encourage the coach to consider new players.
     document.getElementById('quarter').innerText = 'Choose Players for Q'+(currentQuarter+1);
