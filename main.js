@@ -1,8 +1,7 @@
 // A map of playerName to an array of playerPER values
 var playerMap = new Map();
 
-
-// Variables to keep track of constants 
+// Variables to keep track of constants
 const maxPlayersOnCourt = 5;
 const numQuarters = 4;
 
@@ -11,12 +10,12 @@ var currentQuarter = 0;
 var playersOnCourt = 0;
 var quarterInPlay = false;
 
-// Variables to track the PER throughout the game
+// Variables to track PER throughout the game
 var quarterPER = 0;
 var quarterAvePER = 0;
 var totalAvePER = 0;
 
-// Function to read in all of the player stats
+// Function to read in all player stats.
 function processPlayers(allPlayerStats) {
     // Split the data by newline into an array.
     var allPlayerStatLines = allPlayerStats.split(/\r\n|\n/);
@@ -24,18 +23,17 @@ function processPlayers(allPlayerStats) {
     // Remove the header line (first line)
     allPlayerStatLines.shift();
 
-    // Loop through the rows and create a map entry of player name to a list of player PER
+    // Loop through the 15 players and create a map entry of player name to player PER
     for (var statLine of allPlayerStatLines) {
         // Get all individual stat values
         var stats = statLine.split(',');
-
         // If it's just an empty line, skip it
         if (!stats || stats.length <= 1) continue; // empty line
 
         // The second column has the player name
         var playerName = stats[1];
 
-        // Check if player exists in map
+        // check if player exists in map
         if (!playerMap.has(playerName)) {
             // First time we see the player; Add them in!
             playerMap.set(playerName, []);
@@ -47,18 +45,19 @@ function processPlayers(allPlayerStats) {
         // Add per value to player's array (the next quarter)
         playerMap.get(playerName).push(per);
     }
+
     // Add the players to the bench.
     displayPlayerBench();
 }
 
 
-// Function to add the players to the bench to start the game
+// Function to add the players to the bench to start the game.
 function displayPlayerBench() {
     // Get the bench div in which the players will be shown.
     var bench = document.getElementById('playersOnBench');
 
-    // For each player, create a button 
-    for (let playerName of playerMap.keys()){
+    // For each player, create a button. 
+    for (let playerName of playerMap.keys()) {
         // Create a button for each player
         var newPlayer = document.createElement('button');
 
@@ -66,24 +65,24 @@ function displayPlayerBench() {
         newPlayer.id = playerName;
 
         // Identify the style class, which will set the color scheme
-        newPlayer.className = 'playerButton'
+        newPlayer.className = 'playerButton';
 
         // When the button is clicked, call the movePlayer function
         newPlayer.onclick = movePlayer;
-
+        
         // Add the players image to the button
         var playerImage = document.createElement('img');
 
         // Set the source (or location) of the image
-        playerImage.src = 'images/'+playerName+'.png';
+        playerImage.src = 'images/' + playerName +'.png';
 
         // Add the image to the button
         newPlayer.appendChild(playerImage);
 
-        // Add the button to the bench
+        // Add the button to the bench.
         bench.appendChild(newPlayer);
-
     }
+
     // Display cards for all players
     displayPlayerCards();
 }
@@ -162,7 +161,7 @@ function movePlayer() {
             playersOnCourt++;
             quarterPER += playerMap.get(this.id)[currentQuarter];
             quarterAvePER = quarterPER / playersOnCourt;
-            document.getElementById('currentPER').innerText = 'Current PER: '+ quarterAvePER.toPrecision(4);
+            document.getElementById('currentPER').innerText = 'Current PER: ' + quarterAvePER.toPrecision(4);
             
             // Move the player to the court.
             document.getElementById('playersOnCourt').appendChild(this);
@@ -197,7 +196,7 @@ function updateCardsInGame() {
     // For each player, update their player stat card to show PER for that player for 
     // a specific quarter.
     for (let [playerName, playerStats] of playerMap.entries()) {
-        document.getElementById(playerName + '_card').children[1].innerText = 'PER: '+playerStats[currentQuarter].toPrecision(4);
+        document.getElementById(playerName + '_card').children[1].innerText = 'PER: ' + playerStats[currentQuarter].toPrecision(4);
     }
 
     // Reset the current quarter's total PER.
@@ -241,7 +240,7 @@ function endQuarter() {
     totalAvePER += parseFloat(quarterAvePER.toPrecision(4));
 
     // Add the value to the display counter above the stats column.
-    document.getElementById('averagePER').innerText += quarterAvePER + ' + ';
+    document.getElementById('averagePER').innerText += quarterAvePER.toPrecision(4) + ' + ';
 
     // Progress to the next quarter.
     currentQuarter++;
